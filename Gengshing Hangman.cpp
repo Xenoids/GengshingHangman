@@ -27,12 +27,15 @@ void menu_play(char* guess);
 void menu_about(char* guess);
 void menu_exit();
 
+int calculate_score(int score, bool isWrong);
+
 // Global Variables
 struct charData{
 	char charName[100];	
 	char charDesc[100];
 };
 
+// Pake LinkedList?
 struct playerData{
 	char playerName[100];
 	int playerScore;
@@ -56,6 +59,8 @@ playerData pData;
 int randomNum;
 int choice;
 int lives = 3;
+
+char currName[100];
 int currScore = 0;
 
 int wrongCounter;
@@ -67,7 +72,7 @@ int main()
 	// Lives System (OTW) :), Validasi Input (80%?) :), Game Over Scene Blm :), Coloring (masih di hangman)
 	// Leaderboard (player + score) ? , Gambar" mini karakter gengshing + data tambahan
 	// Set BG color + text
-	// Pastikan Validasi duplikat yang wrong char
+	// Pastikan Validasi duplikat yang wrong char (v)
 	SetConsoleTitle("Gengshing Hangman");
 	
 	Set_Color(17,7);
@@ -78,6 +83,10 @@ int main()
 	
 	// Input
 	char guess[100] ={0};
+	
+	// Reset Score and Name
+	currScore = 0;
+	strcpy(currName,"");
 	
 	// Generate Hangman List
 	generate_char();
@@ -295,6 +304,7 @@ do{
 	
 	//puts("ini play!");
 	printf("lives : %d\n",lives);
+	printf("score : %d\n",currScore);
 	space();
 	display_Hangman();
 	space();
@@ -360,6 +370,7 @@ do{
 		do{
 		strcpy(input_YN,"");
 		system("cls");
+		printf("score : %d\n",currScore);
 		display_Hangman();
 		Set_TextColor(GREEN);
 		printf("YOU WIN!\n");
@@ -388,9 +399,18 @@ do{
 		} 
 		else if(strcmp(input_YN,"TIDAK")==0)
 		{
+			system("cls");
 			Set_TextColor(RED);
-			puts("\n\nGAME OVER!");
+			puts("GAME OVER!");
 			Set_Color(17,7);
+			
+			printf("score : %d\n",currScore);
+			puts("Tulis Namamu : ");
+			printf(">>");
+			scanf("%[^\n]",currName);
+			getchar();
+			
+			puts("");
 			system("pause");
 			main();
 		} 
@@ -404,6 +424,7 @@ do{
 		do{
 		strcpy(input_YN,"");
 		system("cls");
+		printf("score : %d\n",currScore);
 		display_Hangman();
 		Set_TextColor(RED);
 		printf("YOU LOSE!\n");
@@ -432,9 +453,18 @@ do{
 		} 
 		else if(strcmp(input_YN,"TIDAK")==0)
 		{
+			system("cls");
 			Set_TextColor(RED);
-			puts("\n\nGAME OVER!");
+			puts("GAME OVER!");
 			Set_Color(17,7);
+			
+			printf("score : %d\n",currScore);
+			puts("Tulis Namamu : ");
+			printf(">>");
+			scanf("%[^\n]",currName);
+			getchar();
+			
+			puts("");
 			system("pause");
 			main();
 		} 
@@ -480,6 +510,7 @@ bool check_answer(char* guess_char, char* alphabet, bool* isCharExist, bool isCo
 			isCharExist[i] = true;
 			guess_char[i] = alphabet[0];
 			isWrong = false;
+			currScore = calculate_score(currScore,isWrong);
 		}
 		else if(alphabet[0] == cData[randomNum].charName[i] && isCharExist[i])
 		{
@@ -489,6 +520,7 @@ bool check_answer(char* guess_char, char* alphabet, bool* isCharExist, bool isCo
 		else if(i == strlen(cData[randomNum].charName)-1 && alphabet[0] != cData[randomNum].charName[i] && isWrong)
 		{
 			lives--;
+			currScore = calculate_score(currScore,isWrong);
 			wrongChar[wrongCounter] = alphabet[0];
 			wrongCounter++;
 		}
@@ -511,6 +543,16 @@ bool check_answer(char* guess_char, char* alphabet, bool* isCharExist, bool isCo
 //	}
 }
 
+int calculate_score(int score, bool isWrong)
+{
+	if(isWrong) score-=5;
+	else if(!isWrong) score+=10;
+	
+	if(score < 0) score = 0;
+	
+	return score;
+}
+
 void convert_guesschar(char* guess_char, bool* isCharExist)
 {	
 //	printf("%s\n",cData[randomNum].charDesc);
@@ -521,7 +563,6 @@ void convert_guesschar(char* guess_char, bool* isCharExist)
 		isCharExist[i] = false;
 	}
 	
-
 }
 
 void print_guesschar(char* guess_char, bool* isCharExist)
