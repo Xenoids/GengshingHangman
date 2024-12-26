@@ -54,7 +54,9 @@ enum txtColor {
 void Set_TextColor(txtColor c);
 
 charData cData[10];
-playerData pData;
+playerData pData[100];
+int dataCount = 0;
+
 
 int randomNum;
 int choice;
@@ -70,7 +72,7 @@ int main()
 {
 	// BACKUP = alphabet awalnya char, diganti jadi string
 	// Lives System (OTW) :), Validasi Input (80%?) :), Game Over Scene Blm :), Coloring (masih di hangman)
-	// Leaderboard (player + score) ? , Gambar" mini karakter gengshing + data tambahan
+	// Leaderboard (player + score) ? sort  , Gambar" mini karakter gengshing + data tambahan
 	// Set BG color + text
 	// Pastikan Validasi duplikat yang wrong char (v)
 	SetConsoleTitle("Gengshing Hangman");
@@ -411,6 +413,42 @@ do{
 			getchar();
 			
 			puts("");
+			
+			strcpy(pData[dataCount].playerName,currName);
+			pData[dataCount].playerScore = currScore;
+			
+			printf("player name : %s\n",pData[dataCount].playerName);
+			printf("player score : %d\n",pData[dataCount].playerScore);
+			dataCount++;
+			
+			if(dataCount-1 > 0)
+			{
+				for(int i = 0;i<dataCount;i++)
+				{
+					for(int j=0;j<dataCount;j++)
+					{
+						if(pData[j+1].playerScore > pData[j].playerScore)
+						{
+							playerData temp;
+							strcpy(temp.playerName,pData[j].playerName);
+							temp.playerScore = pData[j].playerScore; 
+							
+							strcpy(pData[j].playerName,pData[j+1].playerName);
+							pData[j].playerScore = pData[j+1].playerScore;
+							
+							strcpy(pData[j+1].playerName,temp.playerName);
+							pData[j+1].playerScore = temp.playerScore;
+						}
+					}
+				}
+			}
+			
+			printf("LeaderBoard\n");
+			for(int i=0;i<dataCount;i++)
+			{
+				printf("Rank %d: %s - %d\n",i+1,pData[i].playerName,pData[i].playerScore);
+			}
+			
 			system("pause");
 			main();
 		} 
@@ -463,6 +501,42 @@ do{
 			printf(">>");
 			scanf("%[^\n]",currName);
 			getchar();
+			
+			puts("");
+			
+			strcpy(pData[dataCount].playerName,currName);
+			pData[dataCount].playerScore = currScore;
+			printf("player name : %s\n",pData[dataCount].playerName);
+			printf("player score : %d\n",pData[dataCount].playerScore);
+			dataCount++;
+			
+			if(dataCount-1 > 0)
+			{
+				for(int i = 0;i<dataCount;i++)
+				{
+					for(int j=0;j<dataCount;j++)
+					{
+						if(pData[j+1].playerScore > pData[j].playerScore)
+						{
+							playerData temp;
+							strcpy(temp.playerName,pData[j].playerName);
+							temp.playerScore = pData[j].playerScore; 
+							
+							strcpy(pData[j].playerName,pData[j+1].playerName);
+							pData[j].playerScore = pData[j+1].playerScore;
+							
+							strcpy(pData[j+1].playerName,temp.playerName);
+							pData[j+1].playerScore = temp.playerScore;
+						}
+					}
+				}
+			}
+			
+			printf("LeaderBoard\n");
+			for(int i=0;i<dataCount;i++)
+			{
+				printf("Rank %d: %s - %d\n",i+1,pData[i].playerName,pData[i].playerScore);
+			}
 			
 			puts("");
 			system("pause");
