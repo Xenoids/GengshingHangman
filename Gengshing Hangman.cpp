@@ -22,6 +22,8 @@ void convert_guesschar(char* guess, bool* isExist);
 bool check_answer(char* guess, char* ans, bool* isExist, bool isComplete);
 bool check_alpha(char* alpha);
 bool check_YN(char* alpha);
+void sort_leaderboard();
+void print_leaderboard();
 void menu_display(int option,char* alphabet);
 void menu_play(char* guess);
 void menu_about(char* guess);
@@ -417,38 +419,20 @@ do{
 			strcpy(pData[dataCount].playerName,currName);
 			pData[dataCount].playerScore = currScore;
 			
-			printf("player name : %s\n",pData[dataCount].playerName);
-			printf("player score : %d\n",pData[dataCount].playerScore);
+			// For Debug Purpose
+			//printf("player name : %s\n",pData[dataCount].playerName);
+			//printf("player score : %d\n",pData[dataCount].playerScore);
+			
 			dataCount++;
 			
 			if(dataCount-1 > 0)
 			{
-				for(int i = 0;i<dataCount;i++)
-				{
-					for(int j=0;j<dataCount;j++)
-					{
-						if(pData[j+1].playerScore > pData[j].playerScore)
-						{
-							playerData temp;
-							strcpy(temp.playerName,pData[j].playerName);
-							temp.playerScore = pData[j].playerScore; 
-							
-							strcpy(pData[j].playerName,pData[j+1].playerName);
-							pData[j].playerScore = pData[j+1].playerScore;
-							
-							strcpy(pData[j+1].playerName,temp.playerName);
-							pData[j+1].playerScore = temp.playerScore;
-						}
-					}
-				}
+				sort_leaderboard();
 			}
 			
-			printf("LeaderBoard\n");
-			for(int i=0;i<dataCount;i++)
-			{
-				printf("Rank %d: %s - %d\n",i+1,pData[i].playerName,pData[i].playerScore);
-			}
+			print_leaderboard();
 			
+			puts("");
 			system("pause");
 			main();
 		} 
@@ -506,37 +490,19 @@ do{
 			
 			strcpy(pData[dataCount].playerName,currName);
 			pData[dataCount].playerScore = currScore;
-			printf("player name : %s\n",pData[dataCount].playerName);
-			printf("player score : %d\n",pData[dataCount].playerScore);
+			
+			// For Debug purpose
+			//printf("player name : %s\n",pData[dataCount].playerName);
+			//printf("player score : %d\n",pData[dataCount].playerScore);
+			
 			dataCount++;
 			
 			if(dataCount-1 > 0)
 			{
-				for(int i = 0;i<dataCount;i++)
-				{
-					for(int j=0;j<dataCount;j++)
-					{
-						if(pData[j+1].playerScore > pData[j].playerScore)
-						{
-							playerData temp;
-							strcpy(temp.playerName,pData[j].playerName);
-							temp.playerScore = pData[j].playerScore; 
-							
-							strcpy(pData[j].playerName,pData[j+1].playerName);
-							pData[j].playerScore = pData[j+1].playerScore;
-							
-							strcpy(pData[j+1].playerName,temp.playerName);
-							pData[j+1].playerScore = temp.playerScore;
-						}
-					}
-				}
+				sort_leaderboard();
 			}
 			
-			printf("LeaderBoard\n");
-			for(int i=0;i<dataCount;i++)
-			{
-				printf("Rank %d: %s - %d\n",i+1,pData[i].playerName,pData[i].playerScore);
-			}
+			print_leaderboard();
 			
 			puts("");
 			system("pause");
@@ -547,6 +513,41 @@ do{
 
     //printf("Duar!");
 	
+}
+
+void sort_leaderboard()
+{
+	for(int i = 0;i<dataCount;i++)
+	{
+		for(int j=0;j<dataCount;j++)
+		{
+			if(pData[j+1].playerScore > pData[j].playerScore)
+			{
+				playerData temp = pData[j];
+				pData[j] = pData[j+1];
+				pData[j+1] = temp;
+			
+				//playerData temp;
+				//strcpy(temp.playerName,pData[j].playerName);
+				//temp.playerScore = pData[j].playerScore; 
+							
+				//strcpy(pData[j].playerName,pData[j+1].playerName);
+				//pData[j].playerScore = pData[j+1].playerScore;
+							
+				//strcpy(pData[j+1].playerName,temp.playerName);
+				//pData[j+1].playerScore = temp.playerScore;
+			}
+		}
+	}
+}
+
+void print_leaderboard()
+{
+	printf("LeaderBoard\n");
+	for(int i=0;i<dataCount;i++)
+	{
+		printf("Rank %d: %s - %d\n",i+1,pData[i].playerName,pData[i].playerScore);
+	}
 }
 
 bool check_alpha(char* alphabet)
